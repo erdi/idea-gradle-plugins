@@ -1,0 +1,33 @@
+def artifactVersionMappings = [
+    'org.codehaus.groovy:groovy-all': new ArtifactVersionMapping(excludedVersions: ['2.4.6'], useVersion: '2.4.7')
+]
+
+allprojects {
+    configurations.all { configuration ->
+        resolutionStrategy {
+            gradle.taskGraph.whenReady { taskGraph ->
+                if (configuration.state != Configuration.State.RESOLVED && !taskGraph.allTasks.any {
+                    it.name in ['dependencies', 'dependencyInsight']
+                }) {
+                    failOnVersionConflict()
+                }
+            }
+            eachDependency { details ->
+                def requested = details.requested
+
+                def groupAndName = "$requested.group:$requested.name".toString()
+                if (artifactVersionMappings.containsKey(groupAndName)) {
+                    def mapping = artifactVersionMappings[groupAndName]
+                    if (mapping.excludedVersions.contains(requested.version)) {
+                        details.useVersion mapping.useVersion
+                    }
+                }
+            }
+        }
+    }
+}
+
+class ArtifactVersionMapping {
+    String useVersion
+    List<String> excludedVersions
+}
