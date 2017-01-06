@@ -13,6 +13,7 @@ apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.energizedwork.idea-junit'
+apply plugin: 'com.energizedwork.idea-project-components'
 apply plugin: 'codenarc'
 apply plugin: 'com.gradle.plugin-publish'
 
@@ -41,6 +42,10 @@ gradlePlugin {
             id = 'com.energizedwork.idea-junit'
             implementationClass = 'com.energizedwork.gradle.idea.IdeaJunitPlugin'
         }
+        ideaProjectComponentsPlugin {
+            id = 'com.energizedwork.idea-project-components'
+            implementationClass = 'com.energizedwork.gradle.idea.IdeaProjectComponentsPlugin'
+        }
     }
 }
 
@@ -54,6 +59,13 @@ pluginBundle {
             id = 'com.energizedwork.idea-junit'
             displayName = 'Idea JUnit plugin'
             tags = ['idea', 'IntelliJ', 'JUnit']
+        }
+        ideaProjectComponentsPlugin {
+            website = 'https://github.com/energizedwork/idea-gradle-plugins#idea-project-components-plugin'
+            description = 'A plugin that simplifies adding component configurations to IntelliJ project configuration.'
+            id = 'com.energizedwork.idea-project-components'
+            displayName = 'Idea Project Components plugin'
+            tags = ['idea', 'IntelliJ', 'xml']
         }
     }
 }

@@ -15,31 +15,15 @@
  */
 package com.energizedwork.gradle.idea
 
-import org.gradle.testkit.runner.GradleRunner
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
-import spock.lang.Specification
+import org.gradle.testkit.runner.BuildResult
 
-class IdeaJunitPluginSpec extends Specification {
+class IdeaJunitPluginSpec extends PluginSpec {
 
-    private static final String TEST_PROJECT_NAME = 'idea-junit-test'
+    final String pluginId = 'com.energizedwork.idea-junit'
+    final String pluginName = IdeaJunitPlugin.NAME
 
-    @Rule
-    TemporaryFolder testProjectDir
-
-    protected File buildScript
-
-    def setup() {
-        buildScript = testProjectDir.newFile('build.gradle')
-        projectName = TEST_PROJECT_NAME
-    }
-
-    void runIdeaWorkspaceTask() {
-        GradleRunner.create()
-                .withProjectDir(testProjectDir.root)
-                .withArguments('ideaWorkspace')
-                .withPluginClasspath()
-                .build()
+    BuildResult runIdeaWorkspaceTask() {
+        runTask('ideaWorkspace')
     }
 
     def "configuring tasks to be executed before running tests in IntelliJ"() {
@@ -49,7 +33,7 @@ class IdeaJunitPluginSpec extends Specification {
         """
 
         when:
-        def defaultJunitConf = generateAndParseJunitConf(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+        def defaultJunitConf = generateAndParseJunitConf()
 
         then:
         with(defaultJunitConf.method.option[0]) {
@@ -74,7 +58,7 @@ class IdeaJunitPluginSpec extends Specification {
         """
 
         when:
-        def defaultJunitConf = generateAndParseJunitConf(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+        def defaultJunitConf = generateAndParseJunitConf()
 
         then:
         defaultJunitConf.option.find { it.@name == 'VM_PARAMETERS' }.@value ==
@@ -89,7 +73,7 @@ class IdeaJunitPluginSpec extends Specification {
         configurePlugin()
 
         when:
-        def defaultJunitConf = generateAndParseJunitConf(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+        def defaultJunitConf = generateAndParseJunitConf()
 
         then:
         defaultJunitConf.method.option*.attribute('name') != ['Gradle.BeforeRunTask', 'Make']
@@ -102,34 +86,17 @@ class IdeaJunitPluginSpec extends Specification {
         '''
 
         when:
-        def defaultJunitConf = generateAndParseJunitConf(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+        def defaultJunitConf = generateAndParseJunitConf()
 
         then:
         !defaultJunitConf.option.find { it.@name == 'VM_PARAMETERS' }.@value
     }
 
-    private void configurePlugin(String configuration = '') {
-        buildScript << """
-            plugins {
-                id 'com.energizedwork.idea-junit'
-            }
-
-            ${IdeaJunitPlugin.NAME} {
-                $configuration
-            }
-        """
-    }
-
-    private Node generateAndParseJunitConf(File iwsFile) {
+    private Node generateAndParseJunitConf() {
         runIdeaWorkspaceTask()
-        def node = new XmlParser().parse(iwsFile)
-        def runManager = node.component.find { it.'@name' == 'RunManager' }
-        runManager.configuration.find { it.'@default' == 'true' && it.'@type' == 'JUnit' }
+        def node = new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+        def runManager = node.component.find { it.@name == 'RunManager' }
+        runManager.configuration.find { it.@default == 'true' && it.'@type' == 'JUnit' }
     }
 
-    private void setProjectName(String name) {
-        testProjectDir.newFile('settings.gradle') << """
-            rootProject.name = '$name'
-        """
-    }
 }

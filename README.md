@@ -40,6 +40,39 @@ Example usage:
 This plugin does not add any tasks to the project.
 To use this plugin run the `idea` task from Gradle's built-in idea plugin which is applied by this plugin.
 
+## Idea Project Components plugin
+
+This plugin simplifies adding component configurations from xml files to IntelliJ project configuration.
+
+### Installation
+
+For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-project-components).
+
+### Usage
+
+#### Applied plugins
+
+This plugin applies Gradle's built-in idea plugin and works by configuring the `idea` extension of that plugin.
+
+#### Extension methods
+
+This plugin exposes the following method through the extension named `ideaProjectComponents`:
+
+| Signature | Description |
+| --- | --- |
+| <code>void&#160;file(Object&#160;file)</code> | Appends contents of an xml file containing a single `component` node as the root element to children of the root element of the `ipr` file. If a `component` node with the same name already exists in the ipr file then it is replaced. Anything that can be passed to [Project#file(Object)](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html#file(java.lang.Object)) can be used as an argument. |
+
+Example usage:
+
+    ideaProjectComponents {
+        file 'code-style.xml'
+    }
+
+#### Tasks
+
+This plugin does not add any tasks to the project.
+To use this plugin run the `idea` task from Gradle's built-in idea plugin which is applied by this plugin.
+
 ### Building
 
 #### Importing into IDE
