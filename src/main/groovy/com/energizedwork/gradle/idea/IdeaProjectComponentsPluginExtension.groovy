@@ -15,6 +15,8 @@
  */
 package com.energizedwork.gradle.idea
 
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.SimpleType
 import org.gradle.api.Project
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
@@ -27,8 +29,16 @@ class IdeaProjectComponentsPluginExtension {
     }
 
     void file(Object file) {
+        add { it.parse(project.file(file)) }
+    }
+
+    void stream(InputStream stream) {
+        add { it.parse(stream) }
+    }
+
+    private void add(@ClosureParams(value = SimpleType, options = 'groovy.util.XmlParser') Closure<Node> nodeProvider) {
         project.extensions.getByType(IdeaModel).project.ipr.withXml { provider ->
-            def addedComponent = new XmlParser().parse(project.file(file))
+            def addedComponent = nodeProvider.call(new XmlParser())
             def node = provider.asNode()
 
             def replacedComponent = node.component.find { it.@name == addedComponent.@name }

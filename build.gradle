@@ -13,7 +13,7 @@ apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.energizedwork.idea-junit'
-apply plugin: 'com.energizedwork.idea-project-components'
+apply plugin: 'com.energizedwork.idea-base'
 apply plugin: 'codenarc'
 apply plugin: 'com.gradle.plugin-publish'
 
@@ -32,6 +32,7 @@ dependencies {
     }
 
     testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-3'
+    testCompile 'org.xmlunit:xmlunit-core:2.3.0'
 }
 
 codenarc.configFile = rootProject.file('gradle/codenarc/rulesets.groovy')
@@ -45,6 +46,10 @@ gradlePlugin {
         ideaProjectComponentsPlugin {
             id = 'com.energizedwork.idea-project-components'
             implementationClass = 'com.energizedwork.gradle.idea.IdeaProjectComponentsPlugin'
+        }
+        ideaBasePlugin {
+            id = 'com.energizedwork.idea-base'
+            implementationClass = 'com.energizedwork.gradle.idea.IdeaBasePlugin'
         }
     }
 }
@@ -66,6 +71,13 @@ pluginBundle {
             id = 'com.energizedwork.idea-project-components'
             displayName = 'Idea Project Components plugin'
             tags = ['idea', 'IntelliJ', 'xml']
+        }
+        ideaBasePlugin {
+            website = 'https://github.com/energizedwork/idea-gradle-plugins#idea-base'
+            description = 'A convention plugin for applying base IntelliJ project configuration.'
+            id = 'com.energizedwork.idea-base'
+            displayName = 'Idea Base convention plugin'
+            tags = ['idea', 'IntelliJ']
         }
     }
 }

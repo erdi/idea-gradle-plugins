@@ -15,7 +15,7 @@
  */
 package com.energizedwork.gradle.idea
 
-class IdeaProjectComponentsPluginSpec extends PluginSpec {
+class IdeaProjectComponentsPluginSpec extends ConfigurablePluginSpec {
 
     final String pluginName = IdeaProjectComponentsPlugin.NAME
     final String pluginId = 'com.energizedwork.idea-project-components'
@@ -28,6 +28,27 @@ class IdeaProjectComponentsPluginSpec extends PluginSpec {
 
         configurePlugin """
             file '$componentFileName'
+        """
+
+        when:
+        def iprXml = generateAndParseIdeaProjectConf()
+
+        then:
+        iprXml.component.find { it.@name == componentName }
+
+        where:
+        componentFileName = 'testComponent.xml'
+        componentName = 'TestComponent'
+    }
+
+    def "adding project component configuration from stream"() {
+        given:
+        def componentFile = testProjectDir.newFile(componentFileName) << """
+            <component name="$componentName"></component>
+        """
+
+        configurePlugin """
+            stream new File("$componentFile.canonicalPath").newDataInputStream()
         """
 
         when:

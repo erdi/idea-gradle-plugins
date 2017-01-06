@@ -17,7 +17,7 @@ package com.energizedwork.gradle.idea
 
 import org.gradle.testkit.runner.BuildResult
 
-class IdeaJunitPluginSpec extends PluginSpec {
+class IdeaJunitPluginSpec extends ConfigurablePluginSpec {
 
     final String pluginId = 'com.energizedwork.idea-junit'
     final String pluginName = IdeaJunitPlugin.NAME

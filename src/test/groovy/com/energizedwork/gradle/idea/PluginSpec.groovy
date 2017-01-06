@@ -48,17 +48,11 @@ abstract class PluginSpec extends Specification {
 
     abstract String getPluginId()
 
-    abstract String getPluginName()
-
-    protected void configurePlugin(String configuration = '') {
+    protected void applyPlugin() {
         buildScript << """
             plugins {
                 id '$pluginId'
             }
-
-            ${pluginName} {
-                $configuration
-            }
-        """
+         """
     }
 }

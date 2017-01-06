@@ -3,13 +3,7 @@ ideaJunit {
 }
 
 ideaProjectComponents { components ->
-    ["codeStyle", "gradle", "copyright"].each {
+    ["codeStyle", "copyright"].each {
         components.file "gradle/idea/${it}.xml"
-    }
-}
-
-idea {
-    project {
-        vcs = 'Git'
     }
 }
