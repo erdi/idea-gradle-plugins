@@ -73,7 +73,7 @@ pluginBundle {
             tags = ['idea', 'IntelliJ', 'xml']
         }
         ideaBasePlugin {
-            website = 'https://github.com/energizedwork/idea-gradle-plugins#idea-base'
+            website = 'https://github.com/energizedwork/idea-gradle-plugins#idea-base-convention-plugin'
             description = 'A convention plugin for applying base IntelliJ project configuration.'
             id = 'com.energizedwork.idea-base'
             displayName = 'Idea Base convention plugin'
