@@ -17,7 +17,7 @@ For installation instructions please see [this plugin's page on Gradle Plugin Po
 
 #### Applied plugins
 
-This plugin applies [Idea Project Components plugin][#idea-project-components-plugin].
+This plugin applies [Idea Project Components plugin](#idea-project-components-plugin).
 
 #### Extensions
 
