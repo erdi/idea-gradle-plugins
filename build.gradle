@@ -6,6 +6,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.gradle.publish:plugin-publish-plugin:0.9.6'
+        classpath 'gradle.plugin.com.energizedwork.asl2:asl2-gradle-plugin:1.0'
     }
 }
 
@@ -14,6 +15,7 @@ apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
 apply plugin: 'com.energizedwork.idea-junit'
 apply plugin: 'com.energizedwork.idea-base'
+apply plugin: 'com.energizedwork.asl2'
 apply plugin: 'codenarc'
 apply plugin: 'com.gradle.plugin-publish'
 
