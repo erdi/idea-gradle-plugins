@@ -1,4 +1,4 @@
-[![Build Status](https://snap-ci.com/energizedwork/idea-gradle-plugins/branch/master/build_image)](https://snap-ci.com/energizedwork/idea-gradle-plugins/branch/master)
+[![Build Status](https://circleci.com/gh/energizedwork/idea-gradle-plugins/tree/master.svg?style=shield&circle-token=652fc829e0e8890b9165135133ce077ce6b5ba38)](https://circleci.com/gh/energizedwork/idea-gradle-plugins/tree/master)
 [![License](https://img.shields.io/badge/license-ASL2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 # Idea Gradle plugins
