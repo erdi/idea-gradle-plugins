@@ -33,7 +33,9 @@ dependencies {
         exclude module: 'GMetrics'
     }
 
-    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4-rc-3'
+    testCompile 'org.spockframework:spock-core:1.1-groovy-2.4', {
+        exclude group: 'org.codehaus.groovy'
+    }
     testCompile 'org.xmlunit:xmlunit-core:2.3.0'
 }
 
