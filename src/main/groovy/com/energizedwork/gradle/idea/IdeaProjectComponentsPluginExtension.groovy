@@ -37,7 +37,7 @@ class IdeaProjectComponentsPluginExtension {
     }
 
     private void add(@ClosureParams(value = SimpleType, options = 'groovy.util.XmlParser') Closure<Node> nodeProvider) {
-        project.extensions.getByType(IdeaModel).project.ipr.withXml { provider ->
+        project.extensions.getByType(IdeaModel).project?.ipr?.withXml { provider ->
             def addedComponent = nodeProvider.call(new XmlParser())
             def node = provider.asNode()
 

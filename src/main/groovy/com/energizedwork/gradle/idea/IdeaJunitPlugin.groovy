@@ -33,35 +33,33 @@ class IdeaJunitPlugin implements Plugin<Project> {
 
     void setupDefaultJunitConfiguration(Project project, IdeaJunitPluginExtension ideaJunitPluginExtension) {
         project.extensions.configure(IdeaModel) {
-            it.workspace {
-                iws.withXml { provider ->
-                    def tasksAttribute = ideaJunitPluginExtension.tasks.join(SPACE)
-                    def node = provider.asNode()
-                    def runManager = node.component.find { it.'@name' == 'RunManager' }
+            it.workspace?.iws?.withXml { provider ->
+                def tasksAttribute = ideaJunitPluginExtension.tasks.join(SPACE)
+                def node = provider.asNode()
+                def runManager = node.component.find { it.'@name' == 'RunManager' }
 
-                    def defaultJUnitConf = runManager.configuration.find {
-                        it.'@default' == 'true' && it.'@type' == 'JUnit'
-                    }
+                def defaultJUnitConf = runManager.configuration.find {
+                    it.'@default' == 'true' && it.'@type' == 'JUnit'
+                }
 
-                    if (ideaJunitPluginExtension.tasks) {
-                        defaultJUnitConf.method.replaceNode {
-                            method {
-                                option(
-                                        name: 'Gradle.BeforeRunTask',
-                                        enabled: true,
-                                        tasks: tasksAttribute,
-                                        externalProjectPath: project.buildFile.canonicalPath
-                                )
-                                option(name: 'Make', enabled: true)
-                            }
+                if (ideaJunitPluginExtension.tasks) {
+                    defaultJUnitConf.method.replaceNode {
+                        method {
+                            option(
+                                    name: 'Gradle.BeforeRunTask',
+                                    enabled: true,
+                                    tasks: tasksAttribute,
+                                    externalProjectPath: project.buildFile.canonicalPath
+                            )
+                            option(name: 'Make', enabled: true)
                         }
                     }
-
-                    def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
-                    def vmParams = ideaJunitPluginExtension.systemProperties
-                            .collect { "-D${it.key}=${it.value}" }.join(SPACE)
-                    vmParamsNode.@value = vmParams
                 }
+
+                def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
+                def vmParams = ideaJunitPluginExtension.systemProperties
+                        .collect { "-D${it.key}=${it.value}" }.join(SPACE)
+                vmParamsNode.@value = vmParams
             }
         }
     }

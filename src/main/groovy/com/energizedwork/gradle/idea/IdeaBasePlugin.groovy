@@ -31,7 +31,7 @@ class IdeaBasePlugin implements Plugin<Project> {
     }
 
     private void setupVcs(ExtensionContainer extensions) {
-        extensions.getByType(IdeaModel).project.vcs = 'Git'
+        extensions.getByType(IdeaModel).project?.vcs = 'Git'
     }
 
     private void setupGradleImportSettings(ExtensionContainer extensions) {

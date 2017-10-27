@@ -45,6 +45,26 @@ class IdeaBasePluginSpec extends PluginSpec {
                 .hasDifferences()
     }
 
+    def "applying plugin to subprojects does not cause errors"() {
+        given:
+        def subprojectBuildScript = new File(testProjectDir.newFolder(subprojectName), 'build.gradle')
+
+        and:
+        applyPlugin(subprojectBuildScript)
+        settingsFile << """
+            include ':$subprojectName'
+        """
+
+        when:
+        runTask('idea')
+
+        then:
+        noExceptionThrown()
+
+        where:
+        subprojectName = 'subproject'
+    }
+
     private Input.Builder nodeInput(Node node) {
         Input.fromString(XmlUtil.serialize(node))
     }

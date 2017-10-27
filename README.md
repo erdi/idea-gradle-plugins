@@ -15,6 +15,8 @@ For installation instructions please see [this plugin's page on Gradle Plugin Po
 
 ### Usage
 
+This plugin is designed to be applied onto the root project and has no effect if applied to a subproject.
+
 #### Applied plugins
 
 This plugin applies [Idea Project Components plugin](#idea-project-components-plugin).
@@ -37,6 +39,8 @@ This plugin allows to control settings of default JUnit run configuration in Int
 For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-junit).
 
 ### Usage
+
+This plugin is designed to be applied onto the root project and has no effect if applied to a subproject.
 
 #### Applied plugins
 
@@ -72,6 +76,8 @@ This plugin simplifies adding component configurations from different xml source
 For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-project-components).
 
 ### Usage
+
+This plugin is designed to be applied onto the root project and has no effect if applied to a subproject.
 
 #### Applied plugins
 

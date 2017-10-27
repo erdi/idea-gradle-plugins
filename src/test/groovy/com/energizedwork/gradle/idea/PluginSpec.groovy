@@ -22,18 +22,24 @@ import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
 
 abstract class PluginSpec extends Specification {
+
     protected static final String TEST_PROJECT_NAME = 'idea-test'
+
     @Rule
     protected TemporaryFolder testProjectDir
     protected File buildScript
+    protected File settingsFile
+
+    abstract String getPluginId()
 
     void setup() {
         buildScript = testProjectDir.newFile('build.gradle')
+        settingsFile = testProjectDir.newFile('settings.gradle')
         projectName = TEST_PROJECT_NAME
     }
 
     protected void setProjectName(String name) {
-        testProjectDir.newFile('settings.gradle') << """
+        settingsFile << """
             rootProject.name = '$name'
         """
     }
@@ -46,13 +52,12 @@ abstract class PluginSpec extends Specification {
                 .build()
     }
 
-    abstract String getPluginId()
-
-    protected void applyPlugin() {
+    protected void applyPlugin(File buildScript = buildScript) {
         buildScript << """
             plugins {
                 id '$pluginId'
             }
          """
     }
+
 }

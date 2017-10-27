@@ -87,6 +87,34 @@ class IdeaProjectComponentsPluginSpec extends ConfigurablePluginSpec {
         optionName = 'TestOption'
     }
 
+    def "applying plugin to subprojects does not cause errors"() {
+        given:
+        def subprojectDir = testProjectDir.newFolder(subprojectName)
+        def subprojectBuildScript = new File(subprojectDir, 'build.gradle')
+        settingsFile << """
+            include ':$subprojectName'
+        """
+
+        and:
+        new File(subprojectDir, componentFileName) << '''
+            <component/>
+        '''
+
+        configurePlugin("""
+            file '$componentFileName'
+        """, subprojectBuildScript)
+
+        when:
+        runTask('idea')
+
+        then:
+        noExceptionThrown()
+
+        where:
+        subprojectName = 'subproject'
+        componentFileName = 'testComponent.xml'
+    }
+
     private void runIdeaProjectTask() {
         runTask('ideaProject')
     }

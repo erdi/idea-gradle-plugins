@@ -19,8 +19,8 @@ abstract class ConfigurablePluginSpec extends PluginSpec {
 
     abstract String getPluginName()
 
-    protected void configurePlugin(String configuration = '') {
-        applyPlugin()
+    protected void configurePlugin(String configuration = '', File buildScript = buildScript) {
+        applyPlugin(buildScript)
         buildScript << """
             ${pluginName} {
                 $configuration

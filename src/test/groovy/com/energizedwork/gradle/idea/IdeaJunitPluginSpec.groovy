@@ -92,6 +92,26 @@ class IdeaJunitPluginSpec extends ConfigurablePluginSpec {
         !defaultJunitConf.option.find { it.@name == 'VM_PARAMETERS' }.@value
     }
 
+    def "applying plugin to subprojects does not cause errors"() {
+        given:
+        def subprojectBuildScript = new File(testProjectDir.newFolder(subprojectName), 'build.gradle')
+
+        and:
+        applyPlugin(subprojectBuildScript)
+        settingsFile << """
+            include ':$subprojectName'
+        """
+
+        when:
+        runTask('idea')
+
+        then:
+        noExceptionThrown()
+
+        where:
+        subprojectName = 'subproject'
+    }
+
     private Node generateAndParseJunitConf() {
         runIdeaWorkspaceTask()
         def node = new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
