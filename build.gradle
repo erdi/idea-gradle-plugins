@@ -29,7 +29,7 @@ repositories {
 }
 
 dependencies {
-    codenarc('org.codenarc:CodeNarc:0.26.0') {
+    codenarc('org.codenarc:CodeNarc:1.0') {
         exclude module: 'GMetrics'
     }
 
