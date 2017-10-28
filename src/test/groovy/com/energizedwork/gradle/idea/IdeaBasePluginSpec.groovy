@@ -45,6 +45,21 @@ class IdeaBasePluginSpec extends PluginSpec {
                 .hasDifferences()
     }
 
+    def "applying plugin sets up a debug run configuration"() {
+        given:
+        applyPlugin()
+
+        when:
+        def runManager = generateAndParseRunManagerConf()
+
+        then:
+        !DiffBuilder.compare(debugRunConfigurationResourceInput)
+                .withTest(nodeInput(runManager.configuration.find { it.@name == 'Debug' }))
+                .ignoreWhitespace()
+                .build()
+                .hasDifferences()
+    }
+
     def "applying plugin to subprojects does not cause errors"() {
         given:
         def subprojectBuildScript = new File(testProjectDir.newFolder(subprojectName), 'build.gradle')
@@ -71,6 +86,10 @@ class IdeaBasePluginSpec extends PluginSpec {
 
     private Input.Builder getGradleSettingsResourceInput() {
         fromStream(getClass().getResourceAsStream('gradle-settings.xml'))
+    }
+
+    private Input.Builder getDebugRunConfigurationResourceInput() {
+        fromStream(getClass().getResourceAsStream('debug-run-configuration.xml'))
     }
 
     private void runIdeaProjectTask() {

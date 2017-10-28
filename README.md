@@ -8,6 +8,7 @@ This project contains Gradle plugins that allow to control various aspects of In
 ## Idea Base convention plugin
 
 This convention plugin applies base IntelliJ project configuration, namely to use Git as the VCS and dismiss Gradle project import popup.
+It also bootstraps a default remote debug run configuration.
 
 ### Installation
 

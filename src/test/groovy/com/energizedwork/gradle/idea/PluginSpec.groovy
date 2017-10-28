@@ -60,4 +60,18 @@ abstract class PluginSpec extends Specification {
          """
     }
 
+    protected BuildResult runIdeaWorkspaceTask() {
+        runTask('ideaWorkspace')
+    }
+
+    protected Node generateAndParseIdeaWorkspaceConf() {
+        runIdeaWorkspaceTask()
+        new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
+    }
+
+    protected Node generateAndParseRunManagerConf() {
+        def node = generateAndParseIdeaWorkspaceConf()
+        node.component.find { it.@name == 'RunManager' }
+    }
+
 }

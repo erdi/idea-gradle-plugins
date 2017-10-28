@@ -15,16 +15,10 @@
  */
 package com.energizedwork.gradle.idea
 
-import org.gradle.testkit.runner.BuildResult
-
 class IdeaJunitPluginSpec extends ConfigurablePluginSpec {
 
     final String pluginId = 'com.energizedwork.idea-junit'
     final String pluginName = IdeaJunitPlugin.NAME
-
-    BuildResult runIdeaWorkspaceTask() {
-        runTask('ideaWorkspace')
-    }
 
     def "configuring tasks to be executed before running tests in IntelliJ"() {
         given:
@@ -113,9 +107,7 @@ class IdeaJunitPluginSpec extends ConfigurablePluginSpec {
     }
 
     private Node generateAndParseJunitConf() {
-        runIdeaWorkspaceTask()
-        def node = new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.iws"))
-        def runManager = node.component.find { it.@name == 'RunManager' }
+        def runManager = generateAndParseRunManagerConf()
         runManager.configuration.find { it.@default == 'true' && it.'@type' == 'JUnit' }
     }
 

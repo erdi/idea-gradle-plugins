@@ -28,6 +28,7 @@ class IdeaBasePlugin implements Plugin<Project> {
         def extensions = project.extensions
         setupVcs(extensions)
         setupGradleImportSettings(extensions)
+        setupDebugRunConfiguration(project)
     }
 
     private void setupVcs(ExtensionContainer extensions) {
@@ -37,6 +38,19 @@ class IdeaBasePlugin implements Plugin<Project> {
     private void setupGradleImportSettings(ExtensionContainer extensions) {
         def gradleSettingsXmlStream = getClass().getResourceAsStream('gradle-settings.xml')
         extensions.getByType(IdeaProjectComponentsPluginExtension).stream(gradleSettingsXmlStream)
+    }
+
+    private void setupDebugRunConfiguration(Project project) {
+        project.extensions.configure(IdeaModel) {
+            it.workspace?.iws?.withXml { provider ->
+                def addedConfiguration = new XmlParser().parse(getClass().getResourceAsStream('debug-run-configuration.xml'))
+
+                def runManager = provider.asNode().component.find { it.'@name' == 'RunManager' }
+                def replacedConfiguration = runManager.configuration.find { it.@name == 'Debug' }
+
+                replacedConfiguration ? replacedConfiguration.replaceNode(addedConfiguration) : runManager.append(addedConfiguration)
+            }
+        }
     }
 
 }
