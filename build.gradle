@@ -5,7 +5,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.6'
+        classpath 'com.gradle.publish:plugin-publish-plugin:0.9.9'
         classpath 'gradle.plugin.com.energizedwork.asl2:asl2-gradle-plugin:1.0'
     }
 }
