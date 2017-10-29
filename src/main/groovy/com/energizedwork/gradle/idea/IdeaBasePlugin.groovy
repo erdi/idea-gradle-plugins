@@ -29,6 +29,7 @@ class IdeaBasePlugin implements Plugin<Project> {
         setupVcs(extensions)
         setupGradleImportSettings(extensions)
         setupDebugRunConfiguration(project)
+        setupVcsManagerSettings(project)
     }
 
     private void setupVcs(ExtensionContainer extensions) {
@@ -49,6 +50,19 @@ class IdeaBasePlugin implements Plugin<Project> {
                 def replacedConfiguration = runManager.configuration.find { it.@name == 'Debug' }
 
                 replacedConfiguration ? replacedConfiguration.replaceNode(addedConfiguration) : runManager.append(addedConfiguration)
+            }
+        }
+    }
+
+    private void setupVcsManagerSettings(Project project) {
+        project.extensions.configure(IdeaModel) {
+            it.workspace?.iws?.withXml { provider ->
+                def addedComponent = new XmlParser().parse(getClass().getResourceAsStream('vcs-manager-configuration.xml'))
+
+                def node = provider.asNode()
+                def replacedComponent = node.component.find { it.'@name' == 'VcsManagerConfiguration' }
+
+                replacedComponent ? replacedComponent.replaceNode(addedComponent) : node.append(addedComponent)
             }
         }
     }

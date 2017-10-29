@@ -60,6 +60,21 @@ class IdeaBasePluginSpec extends PluginSpec {
                 .hasDifferences()
     }
 
+    def "applying plugin disables code and todo analysis upon committing"() {
+        given:
+        applyPlugin()
+
+        when:
+        def iwsXml = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        !DiffBuilder.compare(vcsManagerConfigurationResourceInput)
+                .withTest(nodeInput(iwsXml.component.find { it.@name == 'VcsManagerConfiguration' }))
+                .ignoreWhitespace()
+                .build()
+                .hasDifferences()
+    }
+
     def "applying plugin to subprojects does not cause errors"() {
         given:
         def subprojectBuildScript = new File(testProjectDir.newFolder(subprojectName), 'build.gradle')
@@ -90,6 +105,10 @@ class IdeaBasePluginSpec extends PluginSpec {
 
     private Input.Builder getDebugRunConfigurationResourceInput() {
         fromStream(getClass().getResourceAsStream('debug-run-configuration.xml'))
+    }
+
+    private Input.Builder getVcsManagerConfigurationResourceInput() {
+        fromStream(getClass().getResourceAsStream('vcs-manager-configuration.xml'))
     }
 
     private void runIdeaProjectTask() {
