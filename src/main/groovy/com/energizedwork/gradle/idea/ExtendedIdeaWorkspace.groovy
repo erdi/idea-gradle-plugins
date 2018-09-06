@@ -26,7 +26,7 @@ class ExtendedIdeaWorkspace {
 
     private final Project project
 
-    final junit = new IdeaJunit()
+    final IdeaJunit junit = new IdeaJunit()
 
     ExtendedIdeaWorkspace(Project project) {
         this.project = project

@@ -23,6 +23,12 @@ ruleset {
         TrailingComma {
             enabled = false
         }
+        VariableTypeRequired {
+            enabled = false
+        }
+        MethodReturnTypeRequired {
+            doNotApplyToClassNames = '*Spec'
+        }
     }
     ruleset("rulesets/design.xml")
     ruleset("rulesets/dry.xml") {
