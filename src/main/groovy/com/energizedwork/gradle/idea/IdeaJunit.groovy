@@ -15,7 +15,7 @@
  */
 package com.energizedwork.gradle.idea
 
-class IdeaJunitPluginExtension {
+class IdeaJunit {
 
     Iterable<?> tasks = []
     Map<String, ?> systemProperties = [:]

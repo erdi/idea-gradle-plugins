@@ -3,7 +3,7 @@
 
 # Idea Gradle plugins
 
-This project contains Gradle plugins that allow to control various aspects of IntelliJ configuration generated using Gradle's built-in idea plugin without requiring any knowledge of IntelliJ's config file structure or having to manipulate XML.
+This project contains a Gradle plugin that allows to control various aspects of IntelliJ configuration generated using Gradle's built-in idea plugin without requiring any knowledge of IntelliJ's config file structure or having to manipulate XML as well as a convention plugin which applies base IntelliJ project configuration.
 
 ## Idea Base convention plugin
 
@@ -20,7 +20,7 @@ This plugin is designed to be applied onto the root project and has no effect if
 
 #### Applied plugins
 
-This plugin applies [Idea Project Components plugin](#idea-project-components-plugin).
+This plugin applies [Idea configuration extensions plugin](#idea-configuration-extensions-plugin).
 
 #### Extensions
 
@@ -31,13 +31,13 @@ This plugin does not add any extensions.
 This plugin does not add any tasks to the project.
 To use this plugin run the `idea` task from Gradle's built-in idea plugin which is transitively applied by this plugin.
 
-## Idea JUnit plugin
+## Idea configuration extensions plugin
 
-This plugin allows to control settings of default JUnit run configuration in IntelliJ.
+This plugin allows to control various aspects of IntelliJ configuration generated using Gradle's built-in idea plugin without requiring any knowledge of IntelliJ's config file structure or having to manipulate XML.
 
 ### Installation
 
-For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-junit).
+For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.extended-idea).
 
 ### Usage
 
@@ -49,7 +49,12 @@ This plugin applies Gradle's built-in idea plugin and works by configuring the `
 
 #### Extension properties
 
-This plugin exposes the following optional properties through the extension named `ideaJunit`:
+This plugin adds an extension called `extended` to the `idea` extension of Gradle's built-in idea plugin. 
+There are several nested configuration properties hanging off the `extended` extension and they are described below.
+
+##### Modifying default JUnit run configuration 
+
+It's possible to modify the default JUnit run configuration via the following properties of `idea.extended.workspace.junit`:
 
 | Name | Type | Description |
 | --- | --- | --- |
@@ -58,35 +63,20 @@ This plugin exposes the following optional properties through the extension name
 
 Example usage:
 
-    ideaJunit {
-        tasks = ['pluginUnderTestMetadata']
-        systemProperties = ['webdriver.chrome.driver': '/path/to/chromedriver']
+    idea {
+        extended {
+            workspace {
+                junit {
+                    tasks = ['pluginUnderTestMetadata']
+                    systemProperties = ['webdriver.chrome.driver': '/path/to/chromedriver']
+                }
+            }
+        }
     }
 
-#### Tasks
+##### Adding project component configurations
 
-This plugin does not add any tasks to the project.
-To use this plugin run the `idea` task from Gradle's built-in idea plugin which is applied by this plugin.
-
-## Idea Project Components plugin
-
-This plugin simplifies adding component configurations from different xml sources to IntelliJ project configuration.
-
-### Installation
-
-For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-project-components).
-
-### Usage
-
-This plugin is designed to be applied onto the root project and has no effect if applied to a subproject.
-
-#### Applied plugins
-
-This plugin applies Gradle's built-in idea plugin and works by configuring the `idea` extension of that plugin.
-
-#### Extension methods
-
-This plugin exposes the following method through the extension named `ideaProjectComponents`:
+IntelliJ project component configurations can be added via the following methods of `idea.extended.project.components`:
 
 | Signature | Description |
 | --- | --- |
@@ -95,8 +85,14 @@ This plugin exposes the following method through the extension named `ideaProjec
 
 Example usage:
 
-    ideaProjectComponents {
-        file 'code-style.xml'
+    idea {
+        extended {
+            project {
+                components {
+                    file 'code-style.xml'
+                }
+            }
+        }
     }
 
 #### Tasks

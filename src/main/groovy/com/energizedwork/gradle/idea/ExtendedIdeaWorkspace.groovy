@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,33 @@
  */
 package com.energizedwork.gradle.idea
 
-import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.plugins.ide.idea.IdeaPlugin
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
-class IdeaJunitPlugin implements Plugin<Project> {
+import static org.gradle.util.ConfigureUtil.configure
+
+class ExtendedIdeaWorkspace {
 
     private static final String SPACE = ' '
-    public static final String NAME = 'ideaJunit'
 
-    void apply(Project project) {
-        project.pluginManager.apply(IdeaPlugin)
-        IdeaJunitPluginExtension extension = project.extensions.create(NAME, IdeaJunitPluginExtension)
-        setupDefaultJunitConfiguration(project, extension)
+    private final Project project
+
+    final junit = new IdeaJunit()
+
+    ExtendedIdeaWorkspace(Project project) {
+        this.project = project
+        setupDefaultJunitConfiguration(project, junit)
     }
 
-    void setupDefaultJunitConfiguration(Project project, IdeaJunitPluginExtension ideaJunitPluginExtension) {
+    @SuppressWarnings('ConfusingMethodName')
+    void junit(@DelegatesTo(IdeaJunit) Closure<?> configuration) {
+        configure(configuration, junit)
+    }
+
+    void setupDefaultJunitConfiguration(Project project, IdeaJunit junit) {
         project.extensions.configure(IdeaModel) {
             it.workspace?.iws?.withXml { provider ->
-                def tasksAttribute = ideaJunitPluginExtension.tasks.join(SPACE)
+                def tasksAttribute = junit.tasks.join(SPACE)
                 def node = provider.asNode()
                 def runManager = node.component.find { it.'@name' == 'RunManager' }
 
@@ -42,7 +49,7 @@ class IdeaJunitPlugin implements Plugin<Project> {
                     it.'@default' == 'true' && it.'@type' == 'JUnit'
                 }
 
-                if (ideaJunitPluginExtension.tasks) {
+                if (junit.tasks) {
                     defaultJUnitConf.method.replaceNode {
                         method {
                             option(
@@ -57,10 +64,11 @@ class IdeaJunitPlugin implements Plugin<Project> {
                 }
 
                 def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
-                def vmParams = ideaJunitPluginExtension.systemProperties
+                def vmParams = junit.systemProperties
                         .collect { "-D${it.key}=${it.value}" }.join(SPACE)
                 vmParamsNode.@value = vmParams
             }
         }
     }
+
 }

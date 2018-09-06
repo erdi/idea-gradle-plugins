@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,16 +15,21 @@
  */
 package com.energizedwork.gradle.idea
 
-import org.gradle.api.Plugin
 import org.gradle.api.Project
-import org.gradle.plugins.ide.idea.IdeaPlugin
 
-class IdeaProjectComponentsPlugin implements Plugin<Project> {
+import static org.gradle.util.ConfigureUtil.configure
 
-    public static final String NAME = 'ideaProjectComponents'
+class ExtendedIdeaProject {
 
-    void apply(Project project) {
-        project.pluginManager.apply(IdeaPlugin)
-        project.extensions.create(NAME, IdeaProjectComponentsPluginExtension, project)
+    final IdeaComponents components
+
+    ExtendedIdeaProject(Project project) {
+        components = new IdeaComponents(project)
     }
+
+    @SuppressWarnings('ConfusingMethodName')
+    void components(@DelegatesTo(IdeaComponents) Closure<?> configuration) {
+        configure(configuration, components)
+    }
+
 }

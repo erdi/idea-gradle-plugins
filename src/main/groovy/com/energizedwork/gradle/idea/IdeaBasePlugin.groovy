@@ -17,13 +17,14 @@ package com.energizedwork.gradle.idea
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
 import org.gradle.api.plugins.ExtensionContainer
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
 class IdeaBasePlugin implements Plugin<Project> {
 
     void apply(Project project) {
-        project.pluginManager.apply(IdeaProjectComponentsPlugin)
+        project.pluginManager.apply(ExtendedIdeaPlugin)
 
         def extensions = project.extensions
         setupVcs(extensions)
@@ -38,7 +39,9 @@ class IdeaBasePlugin implements Plugin<Project> {
 
     private void setupGradleImportSettings(ExtensionContainer extensions) {
         def gradleSettingsXmlStream = getClass().getResourceAsStream('gradle-settings.xml')
-        extensions.getByType(IdeaProjectComponentsPluginExtension).stream(gradleSettingsXmlStream)
+        def ideaModel = extensions.getByType(IdeaModel) as ExtensionAware
+        def extended = ideaModel.extensions.getByType(ExtendedIdeaPluginExtension)
+        extended.project.components.stream(gradleSettingsXmlStream)
     }
 
     private void setupDebugRunConfiguration(Project project) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,17 +15,19 @@
  */
 package com.energizedwork.gradle.idea
 
-abstract class ConfigurablePluginSpec extends PluginSpec {
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.api.plugins.ExtensionAware
+import org.gradle.plugins.ide.idea.IdeaPlugin
+import org.gradle.plugins.ide.idea.model.IdeaModel
 
-    abstract String getPluginName()
+class ExtendedIdeaPlugin implements Plugin<Project> {
 
-    protected void configurePlugin(String configuration = '', File buildScript = buildScript) {
-        applyPlugin(buildScript)
-        buildScript << """
-            ${pluginName} {
-                $configuration
-            }
-        """
+    @Override
+    void apply(Project project) {
+        project.pluginManager.apply(IdeaPlugin)
+        def ideaModel = project.extensions.getByType(IdeaModel) as ExtensionAware
+        ideaModel.extensions.create('extended', ExtendedIdeaPluginExtension, project)
     }
 
 }

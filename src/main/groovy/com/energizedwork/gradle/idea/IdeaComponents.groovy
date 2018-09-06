@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 the original author or authors.
+ * Copyright 2018 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,11 +20,11 @@ import groovy.transform.stc.SimpleType
 import org.gradle.api.Project
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
-class IdeaProjectComponentsPluginExtension {
+class IdeaComponents {
 
     protected final Project project
 
-    IdeaProjectComponentsPluginExtension(Project project) {
+    IdeaComponents(Project project) {
         this.project = project
     }
 
