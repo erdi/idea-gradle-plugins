@@ -1,13 +1,11 @@
-<component name="ProjectCodeStyleSettingsManager">
-    <option name="PER_PROJECT_SETTINGS">
-        <value>
-            <option name="USE_SAME_INDENTS" value="true"/>
-            <option name="IGNORE_SAME_INDENTS_FOR_LANGUAGES" value="true" />
-            <option name="RIGHT_MARGIN" value="160"/>
-            <editorconfig>
-                <option name="ENABLED" value="false" />
-            </editorconfig>
-        </value>
-    </option>
-    <option name="USE_PER_PROJECT_SETTINGS" value="true"/>
+<component name="ProjectCodeStyleConfiguration">
+    <option name="USE_PER_PROJECT_SETTINGS" value="true" />
+    <code_scheme name="Project" version="173">
+        <option name="USE_SAME_INDENTS" value="true" />
+        <option name="IGNORE_SAME_INDENTS_FOR_LANGUAGES" value="true" />
+        <option name="RIGHT_MARGIN" value="160" />
+        <editorconfig>
+            <option name="ENABLED" value="false" />
+        </editorconfig>
+    </code_scheme>
 </component>
