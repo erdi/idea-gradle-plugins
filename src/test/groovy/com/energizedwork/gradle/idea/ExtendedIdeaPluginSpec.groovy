@@ -339,6 +339,69 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
         componentFileName = 'testComponent.xml'
     }
 
+    def "updating an existing workspace property"() {
+        given:
+        configurePlugin """
+            workspace {
+                properties('$name': '$value')
+            }
+        """
+
+        when:
+        def iws = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        propertyValue(iws, name) == value
+
+        where:
+        name = 'GoToFile.includeJavaFiles'
+        value = 'true'
+    }
+
+    def "adding a new workspace property"() {
+        given:
+        configurePlugin """
+            workspace {
+                properties('$name': '$value')
+            }
+        """
+
+        when:
+        def iws = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        propertyValue(iws, name) == value
+
+        where:
+        name = 'show.inlinked.gradle.project.popup'
+        value = 'false'
+    }
+
+    def "applying plugin to subprojects and configuring workspace properties does not cause errors"() {
+        given:
+        def subprojectDir = testProjectDir.newFolder(subprojectName)
+        def subprojectBuildScript = new File(subprojectDir, 'build.gradle')
+        settingsFile << """
+            include ':$subprojectName'
+        """
+
+        and:
+        configurePlugin("""
+            workspace {
+                properties(key: 'value')
+            }
+        """, subprojectBuildScript)
+
+        when:
+        runTask('idea')
+
+        then:
+        noExceptionThrown()
+
+        where:
+        subprojectName = 'subproject'
+    }
+
     private void configurePlugin(String configuration = '', File buildScript = buildScript) {
         applyPlugin(buildScript)
         buildScript << """
@@ -362,5 +425,9 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
     private Node generateAndParseIdeaProjectConf() {
         runIdeaProjectTask()
         new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.ipr"))
+    }
+
+    private String propertyValue(Node xml, String name) {
+        xml.component.find { it.@name == 'PropertiesComponent' }.property.find { it.@name == name }.@value
     }
 }

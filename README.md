@@ -116,6 +116,21 @@ Example usage:
         }
     }
 
+##### Setting workspace properties
+
+Intellij workspace properties as specified in the `PropertiesComponent` component can be controlled via `properties()` method of `idea.extended.workspace`.
+The method takes a single argument, a `Map<String, String>`.
+
+Example usage:
+
+    idea {
+        extended {
+            workspace {
+                properties('show.inlinked.gradle.project.popup': 'false')
+            }
+        }
+    }
+
 #### Tasks
 
 This plugin does not add any tasks to the project.

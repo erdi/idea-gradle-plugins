@@ -16,6 +16,7 @@
 package com.energizedwork.gradle.idea
 
 import org.gradle.api.Project
+import org.gradle.api.XmlProvider
 import org.gradle.plugins.ide.idea.model.IdeaModel
 
 import static org.gradle.util.ConfigureUtil.configure
@@ -25,6 +26,7 @@ class ExtendedIdeaWorkspace {
     private static final String SPACE = ' '
 
     private final Project project
+    protected final Map<String, String> propertyValues = [:]
 
     final IdeaJunit junit = new IdeaJunit()
 
@@ -34,6 +36,7 @@ class ExtendedIdeaWorkspace {
         this.project = project
         this.components = new IdeaComponents(project, project.extensions.getByType(IdeaModel).workspace?.iws)
         setupDefaultJunitConfiguration(project, junit)
+        updatePropertiesComponent()
     }
 
     @SuppressWarnings('ConfusingMethodName')
@@ -46,37 +49,60 @@ class ExtendedIdeaWorkspace {
         configure(configuration, components)
     }
 
+    void properties(Map<String, String> properties) {
+        propertyValues << properties
+    }
+
     private void setupDefaultJunitConfiguration(Project project, IdeaJunit junit) {
-        project.extensions.configure(IdeaModel) {
-            it.workspace?.iws?.withXml { provider ->
-                def tasksAttribute = junit.tasks.join(SPACE)
-                def node = provider.asNode()
-                def runManager = node.component.find { it.'@name' == 'RunManager' }
+        withXml { XmlProvider provider ->
+            def tasksAttribute = junit.tasks.join(SPACE)
+            def node = provider.asNode()
+            def runManager = node.component.find { it.'@name' == 'RunManager' }
 
-                def defaultJUnitConf = runManager.configuration.find {
-                    it.'@default' == 'true' && it.'@type' == 'JUnit'
-                }
+            def defaultJUnitConf = runManager.configuration.find {
+                it.'@default' == 'true' && it.'@type' == 'JUnit'
+            }
 
-                if (junit.tasks) {
-                    defaultJUnitConf.method.replaceNode {
-                        method {
-                            option(
-                                    name: 'Gradle.BeforeRunTask',
-                                    enabled: true,
-                                    tasks: tasksAttribute,
-                                    externalProjectPath: project.buildFile.canonicalPath
-                            )
-                            option(name: 'Make', enabled: true)
-                        }
+            if (junit.tasks) {
+                defaultJUnitConf.method.replaceNode {
+                    method {
+                        option(
+                                name: 'Gradle.BeforeRunTask',
+                                enabled: true,
+                                tasks: tasksAttribute,
+                                externalProjectPath: project.buildFile.canonicalPath
+                        )
+                        option(name: 'Make', enabled: true)
                     }
                 }
+            }
 
-                def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
-                def vmParams = junit.systemProperties
-                        .collect { "-D${it.key}=${it.value}" }.join(SPACE)
-                vmParamsNode.@value = vmParams
+            def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
+            def vmParams = junit.systemProperties
+                    .collect { "-D${it.key}=${it.value}" }.join(SPACE)
+            vmParamsNode.@value = vmParams
+        }
+    }
+
+    private void updatePropertiesComponent() {
+        withXml { XmlProvider provider ->
+            def node = provider.asNode()
+            def propertiesComponent = node.component.find { it.'@name' == 'PropertiesComponent' } as Node
+
+            propertyValues.each { key, value ->
+                findOrAddProperty(propertiesComponent, key).@value = value
             }
         }
+    }
+
+    private void withXml(Closure<?> configuration) {
+        project.extensions.configure(IdeaModel) {
+            it.workspace?.iws?.withXml(configuration)
+        }
+    }
+
+    protected Node findOrAddProperty(Node propertiesComponent, String name) {
+        propertiesComponent.property.find { it.'@name' == name } as Node ?: propertiesComponent.appendNode('property', [name: name])
     }
 
 }
