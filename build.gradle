@@ -21,7 +21,7 @@ apply plugin: 'com.gradle.plugin-publish'
 apply from: 'gradle/dependencyRules.gradle'
 apply from: 'gradle/idea/idea.gradle'
 
-version = '1.4'
+version = '2.0'
 
 repositories {
     mavenCentral()
@@ -71,14 +71,14 @@ pluginBundle {
 
     plugins {
         extendedIdeaPlugin {
-            website = 'https://github.com/erdi/idea-gradle-plugins#idea-configuration-extensions-plugin'
+            website = 'https://github.com/erdi/idea-gradle-plugins#idea-gradle-plugins'
             description = 'A plugin that removes the need for explicit xml manipulation when dealing with some aspects of IntelliJ project configuration.'
             id = 'com.github.erdi.extended-idea'
             displayName = 'Idea configuration extensions plugin'
             tags = ['idea', 'IntelliJ']
         }
         ideaBasePlugin {
-            website = 'https://github.com/erid/idea-gradle-plugins#idea-base-convention-plugin'
+            website = 'https://github.com/erdi/idea-gradle-plugins#idea-gradle-plugins'
             description = 'A convention plugin for applying base IntelliJ project configuration.'
             id = 'com.github.erdi.idea-base'
             displayName = 'Idea Base convention plugin'
