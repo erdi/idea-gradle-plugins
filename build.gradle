@@ -13,7 +13,7 @@ buildscript {
 apply plugin: 'idea'
 apply plugin: 'groovy'
 apply plugin: 'java-gradle-plugin'
-apply plugin: 'com.energizedwork.idea-base'
+apply plugin: 'com.github.erdi.idea-base'
 apply plugin: 'com.energizedwork.asl2'
 apply plugin: 'codenarc'
 apply plugin: 'com.gradle.plugin-publish'
@@ -55,31 +55,32 @@ tasks.withType(GroovyCompile) {
 gradlePlugin {
     plugins {
         extendedIdeaPlugin {
-            id = 'com.energizedwork.extended-idea'
-            implementationClass = 'com.energizedwork.gradle.idea.ExtendedIdeaPlugin'
+            id = 'com.github.erdi.extended-idea'
+            implementationClass = 'com.github.erdi.gradle.idea.ExtendedIdeaPlugin'
         }
         ideaBasePlugin {
-            id = 'com.energizedwork.idea-base'
-            implementationClass = 'com.energizedwork.gradle.idea.IdeaBasePlugin'
+            id = 'com.github.erdi.idea-base'
+            implementationClass = 'com.github.erdi.gradle.idea.IdeaBasePlugin'
         }
     }
 }
 
 pluginBundle {
-    vcsUrl = 'https://github.com/energizedwork/idea-gradle-plugins'
+    vcsUrl = 'https://github.com/erdi/idea-gradle-plugins'
+    website = 'https://github.com/erdi/idea-gradle-plugins#idea-gradle-plugins'
 
     plugins {
         extendedIdeaPlugin {
-            website = 'https://github.com/energizedwork/idea-gradle-plugins#extended-idea-plugin'
+            website = 'https://github.com/erdi/idea-gradle-plugins#idea-configuration-extensions-plugin'
             description = 'A plugin that removes the need for explicit xml manipulation when dealing with some aspects of IntelliJ project configuration.'
-            id = 'com.energizedwork.extended-idea'
+            id = 'com.github.erdi.extended-idea'
             displayName = 'Idea configuration extensions plugin'
             tags = ['idea', 'IntelliJ']
         }
         ideaBasePlugin {
-            website = 'https://github.com/energizedwork/idea-gradle-plugins#idea-base-convention-plugin'
+            website = 'https://github.com/erid/idea-gradle-plugins#idea-base-convention-plugin'
             description = 'A convention plugin for applying base IntelliJ project configuration.'
-            id = 'com.energizedwork.idea-base'
+            id = 'com.github.erdi.idea-base'
             displayName = 'Idea Base convention plugin'
             tags = ['idea', 'IntelliJ']
         }

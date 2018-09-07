@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.energizedwork.gradle.idea
+package com.github.erdi.gradle.idea
 
 class IdeaJunit {
 

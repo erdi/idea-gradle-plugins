@@ -12,7 +12,7 @@ It also bootstraps a default remote debug run configuration and disables code an
 
 ### Installation
 
-For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.idea-base).
+For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.github.erdi.idea-base).
 
 ### Usage
 
@@ -37,7 +37,7 @@ This plugin allows to control various aspects of IntelliJ configuration generate
 
 ### Installation
 
-For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.energizedwork.extended-idea).
+For installation instructions please see [this plugin's page on Gradle Plugin Portal](https://plugins.gradle.org/plugin/com.github.erdi.extended-idea).
 
 ### Usage
 

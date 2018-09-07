@@ -13,30 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.energizedwork.gradle.idea
+package com.github.erdi.gradle.idea
 
 import org.gradle.api.Project
+import org.gradle.plugins.ide.idea.model.IdeaModel
 
 import static org.gradle.util.ConfigureUtil.configure
 
-class ExtendedIdeaPluginExtension {
+class ExtendedIdeaProject {
 
-    final ExtendedIdeaProject project
-    final ExtendedIdeaWorkspace workspace
+    final IdeaComponents components
 
-    ExtendedIdeaPluginExtension(Project project) {
-        this.project = new ExtendedIdeaProject(project)
-        this.workspace = new ExtendedIdeaWorkspace(project)
+    ExtendedIdeaProject(Project project) {
+        this.components = new IdeaComponents(project, project.extensions.getByType(IdeaModel).project?.ipr)
     }
 
     @SuppressWarnings('ConfusingMethodName')
-    void project(@DelegatesTo(ExtendedIdeaProject) Closure<?> configuration) {
-        configure(configuration, project)
-    }
-
-    @SuppressWarnings('ConfusingMethodName')
-    void workspace(@DelegatesTo(ExtendedIdeaWorkspace) Closure<?> configuration) {
-        configure(configuration, workspace)
+    void components(@DelegatesTo(IdeaComponents) Closure<?> configuration) {
+        configure(configuration, components)
     }
 
 }

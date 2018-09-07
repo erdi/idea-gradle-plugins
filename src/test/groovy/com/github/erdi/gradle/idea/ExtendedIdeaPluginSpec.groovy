@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.energizedwork.gradle.idea
+package com.github.erdi.gradle.idea
 
 class ExtendedIdeaPluginSpec extends PluginSpec {
 
-    final String pluginId = 'com.energizedwork.extended-idea'
+    final String pluginId = 'com.github.erdi.extended-idea'
 
     def "configuring tasks to be executed before running tests in IntelliJ"() {
         given:

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.energizedwork.gradle.idea
+package com.github.erdi.gradle.idea
 
 import groovy.xml.XmlUtil
 import org.xmlunit.builder.DiffBuilder
@@ -23,7 +23,7 @@ import static org.xmlunit.builder.Input.fromStream
 
 class IdeaBasePluginSpec extends PluginSpec {
 
-    final String pluginId = 'com.energizedwork.idea-base'
+    final String pluginId = 'com.github.erdi.idea-base'
 
     def "applying plugin sets up vcs"() {
         given:
