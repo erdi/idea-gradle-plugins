@@ -28,8 +28,11 @@ class ExtendedIdeaWorkspace {
 
     final IdeaJunit junit = new IdeaJunit()
 
+    final IdeaComponents components
+
     ExtendedIdeaWorkspace(Project project) {
         this.project = project
+        this.components = new IdeaComponents(project, project.extensions.getByType(IdeaModel).workspace?.iws)
         setupDefaultJunitConfiguration(project, junit)
     }
 
@@ -38,7 +41,12 @@ class ExtendedIdeaWorkspace {
         configure(configuration, junit)
     }
 
-    void setupDefaultJunitConfiguration(Project project, IdeaJunit junit) {
+    @SuppressWarnings('ConfusingMethodName')
+    void components(@DelegatesTo(IdeaComponents) Closure<?> configuration) {
+        configure(configuration, components)
+    }
+
+    private void setupDefaultJunitConfiguration(Project project, IdeaJunit junit) {
         project.extensions.configure(IdeaModel) {
             it.workspace?.iws?.withXml { provider ->
                 def tasksAttribute = junit.tasks.join(SPACE)

@@ -95,6 +95,27 @@ Example usage:
         }
     }
 
+##### Adding workspace component configurations
+
+IntelliJ workspace component configurations can be added via the following methods of `idea.extended.workspace.components`:
+
+| Signature | Description |
+| --- | --- |
+| <code>void&#160;file(Object&#160;file)</code> | Appends contents of an xml file containing a single `component` node as the root element to children of the root element of the `iws` file. If a `component` node with the same name already exists in the iws file then it is replaced. Anything that can be passed to [Project#file(Object)](https://docs.gradle.org/current/javadoc/org/gradle/api/Project.html#file(java.lang.Object)) can be used as an argument. |
+| <code>void&#160;stream(InputStream&#160;stream)</code> | Appends contents of an xml stream containing a single `component` node as the root element to children of the root element of the `iws` file. If a `component` node with the same name already exists in the ipr file then it is replaced. |
+
+Example usage:
+
+    idea {
+        extended {
+            workspace {
+                components {
+                    file 'vcs-manager-configuration.xml'
+                }
+            }
+        }
+    }
+
 #### Tasks
 
 This plugin does not add any tasks to the project.

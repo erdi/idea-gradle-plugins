@@ -16,6 +16,7 @@
 package com.energizedwork.gradle.idea
 
 import org.gradle.api.Project
+import org.gradle.plugins.ide.idea.model.IdeaModel
 
 import static org.gradle.util.ConfigureUtil.configure
 
@@ -24,7 +25,7 @@ class ExtendedIdeaProject {
     final IdeaComponents components
 
     ExtendedIdeaProject(Project project) {
-        components = new IdeaComponents(project)
+        this.components = new IdeaComponents(project, project.extensions.getByType(IdeaModel).project?.ipr)
     }
 
     @SuppressWarnings('ConfusingMethodName')

@@ -30,7 +30,7 @@ class IdeaBasePlugin implements Plugin<Project> {
         setupVcs(extensions)
         setupGradleImportSettings(extensions)
         setupDebugRunConfiguration(project)
-        setupVcsManagerSettings(project)
+        setupVcsManagerSettings(extensions)
     }
 
     private void setupVcs(ExtensionContainer extensions) {
@@ -39,9 +39,7 @@ class IdeaBasePlugin implements Plugin<Project> {
 
     private void setupGradleImportSettings(ExtensionContainer extensions) {
         def gradleSettingsXmlStream = getClass().getResourceAsStream('gradle-settings.xml')
-        def ideaModel = extensions.getByType(IdeaModel) as ExtensionAware
-        def extended = ideaModel.extensions.getByType(ExtendedIdeaPluginExtension)
-        extended.project.components.stream(gradleSettingsXmlStream)
+        extendedIdea(extensions).project.components.stream(gradleSettingsXmlStream)
     }
 
     private void setupDebugRunConfiguration(Project project) {
@@ -57,17 +55,14 @@ class IdeaBasePlugin implements Plugin<Project> {
         }
     }
 
-    private void setupVcsManagerSettings(Project project) {
-        project.extensions.configure(IdeaModel) {
-            it.workspace?.iws?.withXml { provider ->
-                def addedComponent = new XmlParser().parse(getClass().getResourceAsStream('vcs-manager-configuration.xml'))
+    private void setupVcsManagerSettings(ExtensionContainer extensions) {
+        def vcsManagerXmlStream = getClass().getResourceAsStream('vcs-manager-configuration.xml')
+        extendedIdea(extensions).workspace.components.stream(vcsManagerXmlStream)
+    }
 
-                def node = provider.asNode()
-                def replacedComponent = node.component.find { it.'@name' == 'VcsManagerConfiguration' }
-
-                replacedComponent ? replacedComponent.replaceNode(addedComponent) : node.append(addedComponent)
-            }
-        }
+    private ExtendedIdeaPluginExtension extendedIdea(ExtensionContainer extensions) {
+        def ideaModel = extensions.getByType(IdeaModel) as ExtensionAware
+        ideaModel.extensions.getByType(ExtendedIdeaPluginExtension)
     }
 
 }

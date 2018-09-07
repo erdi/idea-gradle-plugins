@@ -18,14 +18,16 @@ package com.energizedwork.gradle.idea
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 import org.gradle.api.Project
-import org.gradle.plugins.ide.idea.model.IdeaModel
+import org.gradle.plugins.ide.api.XmlFileContentMerger
 
 class IdeaComponents {
 
-    protected final Project project
+    private final Project project
+    private final XmlFileContentMerger xmlMerger
 
-    IdeaComponents(Project project) {
+    IdeaComponents(Project project, XmlFileContentMerger xmlMerger) {
         this.project = project
+        this.xmlMerger = xmlMerger
     }
 
     void file(Object file) {
@@ -37,7 +39,7 @@ class IdeaComponents {
     }
 
     private void add(@ClosureParams(value = SimpleType, options = 'groovy.util.XmlParser') Closure<Node> nodeProvider) {
-        project.extensions.getByType(IdeaModel).project?.ipr?.withXml { provider ->
+        xmlMerger?.withXml { provider ->
             def addedComponent = nodeProvider.call(new XmlParser())
             def node = provider.asNode()
 

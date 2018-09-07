@@ -228,6 +228,117 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
         componentFileName = 'testComponent.xml'
     }
 
+    def "adding workspace component configuration from files"() {
+        given:
+        testProjectDir.newFile(componentFileName) << """
+            <component name="$componentName"></component>
+        """
+
+        configurePlugin """
+            workspace {
+                components {
+                    file '$componentFileName'
+                }
+            }
+        """
+
+        when:
+        def iwsXml = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        iwsXml.component.find { it.@name == componentName }
+
+        where:
+        componentFileName = 'testComponent.xml'
+        componentName = 'TestComponent'
+    }
+
+    def "adding workspace component configuration from stream"() {
+        given:
+        def componentFile = testProjectDir.newFile(componentFileName) << """
+            <component name="$componentName"></component>
+        """
+
+        configurePlugin """
+            workspace {
+                components {
+                    stream new File("$componentFile.canonicalPath").newDataInputStream()
+                }
+            }
+        """
+
+        when:
+        def iwsXml = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        iwsXml.component.find { it.@name == componentName }
+
+        where:
+        componentFileName = 'testComponent.xml'
+        componentName = 'TestComponent'
+    }
+
+    def "adding workspace component configuration overrides any existing configuration for that component"() {
+        given:
+        testProjectDir.newFile(componentFileName) << """
+            <component name="$existingComponentName">
+                <option name="$optionName"></option>
+            </component>
+        """
+
+        configurePlugin """
+            workspace {
+                components {
+                    file '$componentFileName'
+                }
+            }
+        """
+
+        when:
+        def existingComponentConfiguration = generateAndParseIdeaWorkspaceConf().component.findAll { it.@name == existingComponentName }
+
+        then:
+        existingComponentConfiguration.size() == 1
+        existingComponentConfiguration.first().option*.@name == [optionName]
+
+        where:
+        componentFileName = 'changeListManager.xml'
+        existingComponentName = 'ChangeListManager'
+        optionName = 'TestOption'
+    }
+
+    def "applying plugin to subprojects and adding workspace component configuration does not cause errors"() {
+        given:
+        def subprojectDir = testProjectDir.newFolder(subprojectName)
+        def subprojectBuildScript = new File(subprojectDir, 'build.gradle')
+        settingsFile << """
+            include ':$subprojectName'
+        """
+
+        and:
+        new File(subprojectDir, componentFileName) << '''
+            <component/>
+        '''
+
+        configurePlugin("""
+            workspace {
+                components {
+                    file '$componentFileName'
+                }
+            }
+        """, subprojectBuildScript)
+
+        when:
+        runTask('idea')
+
+        then:
+        noExceptionThrown()
+
+        where:
+        subprojectName = 'subproject'
+        componentFileName = 'testComponent.xml'
+    }
+
     private void configurePlugin(String configuration = '', File buildScript = buildScript) {
         applyPlugin(buildScript)
         buildScript << """
