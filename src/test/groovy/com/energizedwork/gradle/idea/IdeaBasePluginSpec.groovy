@@ -25,7 +25,7 @@ class IdeaBasePluginSpec extends PluginSpec {
 
     final String pluginId = 'com.energizedwork.idea-base'
 
-    def "applying plugin sets up vcs and gradle project import settings"() {
+    def "applying plugin sets up vcs"() {
         given:
         applyPlugin()
 
@@ -36,13 +36,17 @@ class IdeaBasePluginSpec extends PluginSpec {
         def vcsMapping = iprXml.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.first()
         vcsMapping.@directory == ''
         vcsMapping.@vcs == 'Git'
+    }
 
-        and:
-        !DiffBuilder.compare(gradleSettingsResourceInput)
-                .withTest(nodeInput(iprXml.component.find { it.@name == 'GradleSettings' }))
-                .ignoreWhitespace()
-                .build()
-                .hasDifferences()
+    def "applying plugin disables unlinked gradle project notification"() {
+        given:
+        applyPlugin()
+
+        when:
+        def iwsXml = generateAndParseIdeaWorkspaceConf()
+
+        then:
+        propertyValue(iwsXml, 'show.inlinked.gradle.project.popup') == 'false'
     }
 
     def "applying plugin sets up a debug run configuration"() {
@@ -97,10 +101,6 @@ class IdeaBasePluginSpec extends PluginSpec {
 
     private Input.Builder nodeInput(Node node) {
         Input.fromString(XmlUtil.serialize(node))
-    }
-
-    private Input.Builder getGradleSettingsResourceInput() {
-        fromStream(getClass().getResourceAsStream('gradle-settings.xml'))
     }
 
     private Input.Builder getDebugRunConfigurationResourceInput() {

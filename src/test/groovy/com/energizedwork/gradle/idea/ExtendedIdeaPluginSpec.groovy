@@ -426,8 +426,4 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
         runIdeaProjectTask()
         new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.ipr"))
     }
-
-    private String propertyValue(Node xml, String name) {
-        xml.component.find { it.@name == 'PropertiesComponent' }.property.find { it.@name == name }.@value
-    }
 }

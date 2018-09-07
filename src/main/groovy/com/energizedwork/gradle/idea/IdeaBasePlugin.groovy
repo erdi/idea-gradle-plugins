@@ -38,8 +38,7 @@ class IdeaBasePlugin implements Plugin<Project> {
     }
 
     private void setupGradleImportSettings(ExtensionContainer extensions) {
-        def gradleSettingsXmlStream = getClass().getResourceAsStream('gradle-settings.xml')
-        extendedIdea(extensions).project.components.stream(gradleSettingsXmlStream)
+        extendedIdea(extensions).workspace.properties('show.inlinked.gradle.project.popup': 'false')
     }
 
     private void setupDebugRunConfiguration(Project project) {
