@@ -136,18 +136,18 @@ Example usage:
 This plugin does not add any tasks to the project.
 To use this plugin run the `idea` task from Gradle's built-in idea plugin which is applied by this plugin.
 
-### Building
+## Building
 
-#### Importing into IDE
+### Importing into IDE
 
 The project is setup to generate IntelliJ configuration files.
 Simply run `./gradlew idea` and open the generated `*.ipr` file in IntelliJ.
 
-#### Tests
+### Tests
 
 If you import the project into IntelliJ as described above then you can run integration tests even after changing the code without having to perform any manual steps.
 They are configured to run in an environment matching the one used when running them using Gradle on the command line.
 
-#### Checking the build
+### Checking the build
 
 The project contains some code verification tasks aside from tests so if you wish to run a build matching the one on CI then execute `./gradlew check`. 
