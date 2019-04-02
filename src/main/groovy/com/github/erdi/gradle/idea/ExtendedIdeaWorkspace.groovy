@@ -35,7 +35,7 @@ class ExtendedIdeaWorkspace {
     ExtendedIdeaWorkspace(Project project) {
         this.project = project
         this.components = new IdeaComponents(project, project.extensions.getByType(IdeaModel).workspace?.iws)
-        setupDefaultJunitConfiguration(project, junit)
+        setupDefaultJunitConfiguration()
         updatePropertiesComponent()
     }
 
@@ -53,34 +53,50 @@ class ExtendedIdeaWorkspace {
         propertyValues << properties
     }
 
-    private void setupDefaultJunitConfiguration(Project project, IdeaJunit junit) {
+    private void setupDefaultJunitConfiguration() {
         withXml { XmlProvider provider ->
-            def tasksAttribute = junit.tasks.join(SPACE)
             def node = provider.asNode()
             def runManager = node.component.find { it.'@name' == 'RunManager' }
-
             def defaultJUnitConf = runManager.configuration.find {
                 it.'@default' == 'true' && it.'@type' == 'JUnit'
             }
 
-            if (junit.tasks) {
-                defaultJUnitConf.method.replaceNode {
-                    method {
-                        option(
-                                name: 'Gradle.BeforeRunTask',
-                                enabled: true,
-                                tasks: tasksAttribute,
-                                externalProjectPath: project.buildFile.canonicalPath
-                        )
-                        option(name: 'Make', enabled: true)
-                    }
+            setupDefaultJunitGradleTasks(defaultJUnitConf)
+            setupDefaultJunitSystemProperties(defaultJUnitConf)
+            setupDefaultJunitEnvironmentVariables(defaultJUnitConf)
+        }
+    }
+
+    protected void setupDefaultJunitGradleTasks(Node defaultJUnitConf) {
+        if (junit.tasks) {
+            def tasksAttribute = junit.tasks.join(SPACE)
+
+            defaultJUnitConf.method.replaceNode {
+                method {
+                    option(
+                            name: 'Gradle.BeforeRunTask',
+                            enabled: true,
+                            tasks: tasksAttribute,
+                            externalProjectPath: project.buildFile.canonicalPath
+                    )
+                    option(name: 'Make', enabled: true)
                 }
             }
+        }
+    }
 
-            def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
-            def vmParams = junit.systemProperties
-                    .collect { "-D${it.key}=${it.value}" }.join(SPACE)
-            vmParamsNode.@value = vmParams
+    protected void setupDefaultJunitSystemProperties(Node defaultJUnitConf) {
+        def vmParamsNode = defaultJUnitConf.option.find { it.@name == 'VM_PARAMETERS' }
+        def vmParams = junit.systemProperties.collect { "-D${it.key}=${it.value}" }.join(SPACE)
+        vmParamsNode.@value = vmParams
+    }
+
+    protected void setupDefaultJunitEnvironmentVariables(Node defaultJUnitConf) {
+        if (junit.environment) {
+            def envs = defaultJUnitConf.envs.first()
+            junit.environment.each { name, value ->
+                findOrAddEnv(envs, name).@value = value.toString()
+            }
         }
     }
 
@@ -103,6 +119,10 @@ class ExtendedIdeaWorkspace {
 
     protected Node findOrAddProperty(Node propertiesComponent, String name) {
         propertiesComponent.property.find { it.'@name' == name } as Node ?: propertiesComponent.appendNode('property', [name: name])
+    }
+
+    private Node findOrAddEnv(Node envs, String name) {
+        envs.env.find { it.'@name' == name } as Node ?: envs.appendNode('env', [name: name])
     }
 
 }

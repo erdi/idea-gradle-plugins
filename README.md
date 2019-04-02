@@ -59,6 +59,7 @@ It's possible to modify the default JUnit run configuration via the following pr
 | Name | Type | Description |
 | --- | --- | --- |
 | `systemProperties` | `Map<String, ?>` | Entries are transformed into system properties which are set on the default JUnit run configuration using "VM options" field. |
+| `environment` | `Map<String, ?>` | Entries are transformed into environment variables which are set on the default JUnit run configuration using "envs" tag. |
 | `tasks` | `Iterable<String>` | An iterable containing Gradle task names and/or paths in the project. If not empty, execution of the provided tasks will be added to the "Before launch section" of the default JUnit run configuration. |
 
 Example usage:
@@ -69,6 +70,7 @@ Example usage:
                 junit {
                     tasks = ['pluginUnderTestMetadata']
                     systemProperties = ['webdriver.chrome.driver': '/path/to/chromedriver']
+                    environment = [TEST: 'true']
                 }
             }
         }

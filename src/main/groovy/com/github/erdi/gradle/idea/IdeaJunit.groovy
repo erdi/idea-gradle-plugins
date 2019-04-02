@@ -19,5 +19,6 @@ class IdeaJunit {
 
     Iterable<?> tasks = []
     Map<String, ?> systemProperties = [:]
+    Map<String, ?> environment = [:]
 
 }

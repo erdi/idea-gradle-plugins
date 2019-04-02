@@ -69,6 +69,26 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
         testProperties = [foo: 'bar', fizz: 'buzz']
     }
 
+    def "configuring environment variables to be set when running tests in IntelliJ"() {
+        given:
+        configurePlugin """
+            workspace {
+                junit {
+                    environment = [${testProperties.collect { "${it.key}: '${it.value}'" }.join(', ')}]
+                }
+            }
+        """
+
+        when:
+        def defaultJunitConf = generateAndParseJunitConf()
+
+        then:
+        defaultJunitConf.envs.env.collectEntries { [(it.@name): it.@value] } == testProperties
+
+        where:
+        testProperties = [foo: 'bar', fizz: 'buzz']
+    }
+
     def "when no tasks are configured to be executed before running tests then config is not modified"() {
         given:
         applyPlugin()
@@ -95,6 +115,23 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
 
         then:
         !defaultJunitConf.option.find { it.@name == 'VM_PARAMETERS' }.@value
+    }
+
+    def "when no environment variables are configured to be executed before running tests then config is not modified"() {
+        given:
+        configurePlugin '''
+            workspace {
+                junit {
+                    environment = null
+                }
+            }
+        '''
+
+        when:
+        def defaultJunitConf = generateAndParseJunitConf()
+
+        then:
+        !defaultJunitConf.envs.env
     }
 
     def "applying plugin to subprojects does not cause errors"() {
