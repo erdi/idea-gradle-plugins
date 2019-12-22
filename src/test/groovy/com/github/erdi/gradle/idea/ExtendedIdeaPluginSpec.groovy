@@ -463,4 +463,5 @@ class ExtendedIdeaPluginSpec extends PluginSpec {
         runIdeaProjectTask()
         new XmlParser().parse(new File(testProjectDir.root, "${TEST_PROJECT_NAME}.ipr"))
     }
+
 }

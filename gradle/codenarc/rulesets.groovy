@@ -29,6 +29,9 @@ ruleset {
         MethodReturnTypeRequired {
             doNotApplyToClassNames = '*Spec'
         }
+        CompileStatic {
+            enabled = false
+        }
     }
     ruleset("rulesets/design.xml")
     ruleset("rulesets/dry.xml") {
@@ -38,9 +41,6 @@ ruleset {
     }
     ruleset("rulesets/exceptions.xml")
     ruleset("rulesets/formatting.xml") {
-        ClassJavadoc {
-            enabled = false
-        }
         SpaceAroundMapEntryColon {
             characterAfterColonRegex = /\s/
         }

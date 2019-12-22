@@ -77,4 +77,5 @@ abstract class PluginSpec extends Specification {
     protected String propertyValue(Node xml, String name) {
         xml.component.find { it.@name == 'PropertiesComponent' }.property.find { it.@name == name }.@value
     }
+
 }
