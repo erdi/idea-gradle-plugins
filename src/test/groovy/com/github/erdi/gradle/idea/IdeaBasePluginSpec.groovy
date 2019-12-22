@@ -47,6 +47,7 @@ class IdeaBasePluginSpec extends PluginSpec {
 
         then:
         propertyValue(iwsXml, 'show.inlinked.gradle.project.popup') == 'false'
+        propertyValue(iwsXml, 'show.unlinked.gradle.project.popup') == 'false'
     }
 
     def "applying plugin sets up a debug run configuration"() {

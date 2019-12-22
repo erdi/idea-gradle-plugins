@@ -38,7 +38,10 @@ class IdeaBasePlugin implements Plugin<Project> {
     }
 
     private void setupGradleImportSettings(ExtensionContainer extensions) {
-        extendedIdea(extensions).workspace.properties('show.inlinked.gradle.project.popup': 'false')
+        extendedIdea(extensions).workspace.properties(
+                'show.inlinked.gradle.project.popup': 'false',
+                'show.unlinked.gradle.project.popup': 'false'
+        )
     }
 
     private void setupDebugRunConfiguration(Project project) {
