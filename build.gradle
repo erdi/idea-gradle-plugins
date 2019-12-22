@@ -21,7 +21,7 @@ apply plugin: 'com.gradle.plugin-publish'
 apply from: 'gradle/dependencyRules.gradle'
 apply from: 'gradle/idea/idea.gradle'
 
-version = '2.1'
+version = '2.2'
 
 repositories {
     mavenCentral()
